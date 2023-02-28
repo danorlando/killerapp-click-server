@@ -1,0 +1,39 @@
+# Dependencies
+old
+node_modules
+jspm_packages
+
+# Serverless
+.serverless
+
+# Dynamodb
+.dynamodb
+
+# Webpack
+.webpack
+
+# Output
+dist
+
+# Dotenv files
+.env
+.env.*
+.env*.local
+
+# Local folder
+local
+
+# testing
+coverage
+
+# Misc
+.DS_Store
+*.pem
+Thumbs.db
+.npmrc
+
+# Error logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*

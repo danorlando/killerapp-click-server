@@ -18,11 +18,11 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 // @ts-ignore
-const ChatGPTFunction = async (songTitle) => {
+const ChatGPTFunction = async (titles, length) => {
   const response = await openai.createCompletion({
     model: 'text-davinci-003',
-    prompt: `Generate a list of 10 songs from different artists similar to ${songTitle}. I do not have to know how you came up with the answer. I just want to know what songs you think are similar to ${songTitle}.`,
-    temperature: 0.6,
+    prompt: `Generate a list of ${length} songs from different artists similar to ${titles}, ordered by relative similarity. I do not have to know how you came up with the answer.`,
+    temperature: 0.5,
     max_tokens: 250,
     top_p: 1,
     frequency_penalty: 0,
@@ -49,18 +49,21 @@ app.get('/', (_, res) => {
 });
 
 app.post('/song', async (req, res) => {
-  const { song } = req.body;
+  const { titles, length } = req.body;
 
-  if (song && typeof song !== 'string') {
+  if (titles && typeof titles !== 'string') {
     res.status(400).json({ error: '"song" must be a string' });
   }
+  if (length && typeof length !== 'number') {
+    res.status(400).json({ error: '"length" must be a number' });
+  }
 
-  const recommendedTitles = await ChatGPTFunction(song);
-  if (!recommendedTitles) {
+  const suggestions = await ChatGPTFunction(titles, length);
+  if (!suggestions) {
     return res.status(500).json({ error: 'Unable to contact ChatGPT server' });
   }
 
-  return res.status(200).json({ recommendedTitles });
+  return res.status(200).json({ suggestions });
 });
 
 // app.post("/artist", async function (req, res) {

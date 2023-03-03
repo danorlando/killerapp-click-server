@@ -21,7 +21,9 @@ const openai = new OpenAIApi(configuration);
 const ChatGPTFunction = async (titles, length) => {
   const response = await openai.createCompletion({
     model: 'text-davinci-003',
-    prompt: `Generate a list of ${length} songs from different artists similar to ${titles}, ordered by relative similarity. I do not have to know how you came up with the answer.`,
+    // prompt: `Generate a list of ${length} songs from different artists similar to ${titles}, ordered by relative similarity. I do not have to know how you came up with the answer.`,
+    prompt: `Create a valid JSON array of ${length} songs from different artists similar to ${titles}, ordered by relative similarity using this as a model:
+            [{ "title": title, "artist": artist}]. Do not include line breaks. Do not escape the double quotes. Do not return any non-json text or numbering. The output should be an array of valid JSON objects.`,
     temperature: 0.5,
     max_tokens: 250,
     top_p: 1,
@@ -59,10 +61,11 @@ app.post('/song', async (req, res) => {
   }
 
   const suggestions = await ChatGPTFunction(titles, length);
+
   if (!suggestions) {
     return res.status(500).json({ error: 'Unable to contact ChatGPT server' });
   }
-
+  JSON.parse(suggestions);
   return res.status(200).json({ suggestions });
 });
 

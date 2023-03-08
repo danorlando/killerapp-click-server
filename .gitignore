@@ -14,7 +14,7 @@ jspm_packages
 
 # Output
 dist
-build
+.build
 
 # types
 types

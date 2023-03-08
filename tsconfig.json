@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "lib": ["es2017"],
+    "lib": ["es2020"],
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "strict": true,
-    "alwaysStrict": true,
     "strictNullChecks": true,
     "noUncheckedIndexedAccess": true,
 
@@ -19,21 +18,22 @@
     "allowUnreachableCode": false,
     "noFallthroughCasesInSwitch": true,
 
-    "target": "es2017",
-    "outDir": "dist",
+    "target": "es5",
+    "outDir": "./types",
     "declaration": true,
+    "declarationDir": "./types",
     "sourceMap": true,
 
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "allowJs": false,
+    "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
 
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "exclude": ["./dist/**/*", "./node_modules/**/*"]
+  "exclude": ["./dist/**/*", "./build/**/*", "./node_modules/**/*"]
 }

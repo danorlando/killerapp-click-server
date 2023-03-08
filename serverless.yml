@@ -1,4 +1,4 @@
-service: serverless-boilerplate
+service: killerapp-serverless
 
 custom:
   # Our stage is based on what is passed in when running serverless
@@ -8,14 +8,14 @@ custom:
   bundle:
     linting: false
     excludeFiles: "**/*.test.ts"
-    # externals:
-    #   - "@prisma/client"
-    # copyFiles:
-    #   - from: "prisma/schema.prisma"
-    #     to: "./"
-    # packagerOptions:
-    #   scripts:
-    #     - prisma generate && rimraf node_modules/@prisma/engines/** && rimraf node_modules/prisma/libquery_engine-[^rhel]* && prisma db push
+    externals:
+      - "@prisma/client"
+    copyFiles:
+      - from: "prisma/schema.prisma"
+        to: "./"
+    packagerOptions:
+      scripts:
+        - prisma generate && rimraf node_modules/@prisma/engines/** && rimraf node_modules/prisma/libquery_engine-[^rhel]* && prisma db push
   serverless-offline:
     httpPort: 4000
     noPrependStageInUrl: true
@@ -24,8 +24,11 @@ custom:
 provider:
   name: aws
   runtime: nodejs14.x
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    NODE_OPTIONS: --enable-source-maps --stack-trace-limit=1000 --experimental-modules --es-module-specifier-resolution=node
   memorySize: 512
-  timeout: 10
+  timeout: 30
   logRetentionInDays: 90
   logs:
     httpApi: true
@@ -44,8 +47,8 @@ functions:
           path: "/{proxy+}"
           method: "*"
       - httpApi: 
-          path: "/song"
-          method: get
+          path: "/users"
+          method: "*"
 
 package:
   individually: true

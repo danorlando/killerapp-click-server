@@ -1,24 +1,25 @@
+import type { User } from '@prisma/client';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function createUser(data) {
-  const { email, name } = data;
+export async function createUser({ data }: { data: User }): Promise<User> {
+  const { email, firstName, lastName } = data;
 
   const user = await prisma.user.create({
-    data: { email, name },
+    data: { email, firstName, lastName },
   });
 
   return user;
 }
 
-export async function getUsers() {
+export async function getUsers(): Promise<User[]> {
   const users = await prisma.user.findMany();
 
   return users;
 }
 
-export async function getUserById(id) {
+export async function getUserById(id: string): Promise<User | null> {
   const user = await prisma.user.findUnique({
     where: { id },
   });
@@ -26,7 +27,7 @@ export async function getUserById(id) {
   return user;
 }
 
-export async function updateUserById(id, data) {
+export async function updateUserById(id: string, data: User): Promise<User> {
   const user = await prisma.user.update({
     where: { id },
     data,
@@ -35,7 +36,7 @@ export async function updateUserById(id, data) {
   return user;
 }
 
-export async function deleteUserById(id) {
+export async function deleteUserById(id: string): Promise<User> {
   const user = await prisma.user.delete({
     where: { id },
   });
@@ -43,7 +44,10 @@ export async function deleteUserById(id) {
   return user;
 }
 
-export async function queryUsers(filter, options) {
+export async function queryUsers(
+  filter: any,
+  options: any
+): Promise<User[] | null> {
   const { sortBy, limit, page } = options;
 
   const users = await prisma.user.findMany({

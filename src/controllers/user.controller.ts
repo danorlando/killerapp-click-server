@@ -1,60 +1,51 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import httpStatus from 'http-status';
+import type { Request, Response } from 'express';
 import pick from '../utils/pick';
 import catchAsync from '../utils/catchAsync';
 import ApiError from '../utils/ApiError';
 import * as userService from '../services/user.service';
-import type { TRequestResponseNextFunction } from '../types';
 
-const createUser = catchAsync(
-  async ({ request, response }: TRequestResponseNextFunction) => {
-    const user = await userService.createUser(request.body);
-    response.status(httpStatus.CREATED).send(user);
-  }
-);
+const createUser = catchAsync(async (req: Request, res: Response) => {
+  const user = await userService.createUser(req.body);
+  res.status(httpStatus.CREATED).json(user);
+});
 
-const queryUsers = catchAsync(
-  async ({ request, response }: TRequestResponseNextFunction) => {
-    const filter = pick(request.query, ['name', 'role']);
-    const options = pick(request.query, ['sortBy', 'limit', 'page']);
-    const responseult = await userService.queryUsers(filter, options);
-    response.send(responseult);
-  }
-);
+const queryUsers = catchAsync(async (req: Request, res: Response) => {
+  const filter = pick(req.query, ['name', 'role']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const responseult = await userService.queryUsers(filter, options);
+  res.send(responseult);
+});
 
-const getUsers = catchAsync(
-  async ({ response }: TRequestResponseNextFunction) => {
-    const responseResult = await userService.getUsers();
-    response.send(responseResult);
-  }
-);
+const getUsers = catchAsync(async (_req: Request, res: Response) => {
+  const allUsers = await userService.getUsers();
+  res.status(200).json(allUsers);
+});
 
-const getUserById = catchAsync(
-  async ({ request, response }: TRequestResponseNextFunction) => {
-    const user = await userService.getUserById(request.params.userId);
-    if (!user) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-    }
-    response.send(user);
+const getUserById = catchAsync(async (req: Request, res: Response) => {
+  // @ts-ignore
+  const user = await userService.getUserById(req.params.userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-);
+  res.status(200).json(user);
+});
 
-const updateUserById = catchAsync(
-  async ({ request, response }: TRequestResponseNextFunction) => {
-    const user = await userService.updateUserById(
-      request.params.userId,
-      request.body
-    );
-    response.send(user);
-  }
-);
+const updateUserById = catchAsync(async (req: Request, res: Response) => {
+  const user = await userService.updateUserById(
+    // @ts-ignore
+    req.params.userId,
+    req.body
+  );
+  res.status(200).json(user);
+});
 
-const deleteUserById = catchAsync(
-  async ({ request, response }: TRequestResponseNextFunction) => {
-    await userService.deleteUserById(request.params.userId);
-    response.status(httpStatus.NO_CONTENT).send();
-  }
-);
+const deleteUserById = catchAsync(async (req: Request, res: Response) => {
+  // @ts-ignore
+  await userService.deleteUserById(req.params.userId);
+  res.status(httpStatus.NO_CONTENT);
+});
 
 export {
   createUser,

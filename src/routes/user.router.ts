@@ -13,6 +13,7 @@ import {
 // import AdminUserRoles from '../roles/user.roles';
 
 const userRouter = express.Router();
+userRouter.get('/users', validateAccessToken, getUsers);
 
 userRouter.post('/users', validateAccessToken, createUser);
 

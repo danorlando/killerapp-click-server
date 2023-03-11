@@ -13,10 +13,9 @@ export async function createUser(data) {
 }
 
 export async function getUsers() {
-  // const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany();
 
-  // return users;
-  return 'Call to getUsers successful';
+  return users;
 }
 
 export async function getUserById(id) {

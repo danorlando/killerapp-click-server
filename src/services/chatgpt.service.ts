@@ -6,9 +6,13 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-export async function createChatService(prompt: string) {
+export async function createChatService(prompt: string, model: string) {
+  let engine = model;
+  if (!engine || engine === '') {
+    engine = 'text-davinci-003';
+  }
   const response = await openai.createCompletion({
-    model: 'text-davinci-003',
+    model: engine,
     prompt,
     temperature: 0.5,
     max_tokens: 125,
@@ -20,4 +24,9 @@ export async function createChatService(prompt: string) {
   return response.data.choices[0]!.text;
 }
 
-export default { createChatService };
+export async function getOpenAIModelsService() {
+  const response = await openai.listEngines();
+  return response.data;
+}
+
+export default { createChatService, getOpenAIModelsService };

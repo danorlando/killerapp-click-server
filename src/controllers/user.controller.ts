@@ -20,7 +20,7 @@ const queryUsers = catchAsync(async (req: Request, res: Response) => {
 
 const getUsers = catchAsync(async (_req: Request, res: Response) => {
   const allUsers = await userService.getUsers();
-  res.status(200).json(allUsers);
+  res.status(200).json({ users: allUsers });
 });
 
 const getUserById = catchAsync(async (req: Request, res: Response) => {
